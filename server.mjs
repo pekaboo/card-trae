@@ -33,8 +33,12 @@ const server = http.createServer(async (req, res) => {
     }
 
     const route = url.pathname === '/' ? '/index.html' : decodeURIComponent(url.pathname);
-    const file = path.join(root, path.normalize(route).replace(/^([.][.][/\\])+/, ''));
+    let file = path.join(root, path.normalize(route).replace(/^([.][.][/\\])+/, ''));
     if (!file.startsWith(root)) throw new Error('Forbidden');
+
+    // serve index.html for directories (e.g. /tarot → /tarot/index.html)
+    if (file.endsWith('/')) file += 'index.html';
+    else if ((await stat(file).catch(() => null))?.isDirectory()) file = path.join(file, 'index.html');
 
     const info = await stat(file);
     const type = url.pathname === '/resources'
@@ -55,4 +59,5 @@ const server = http.createServer(async (req, res) => {
 
 server.listen(port, '127.0.0.1', () => {
   console.log(`Trae clone → http://127.0.0.1:${port}/`);
+  console.log(`Tarot app   → http://127.0.0.1:${port}/tarot/`);
 });

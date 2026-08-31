@@ -12,6 +12,8 @@ node server.mjs
 
 Open: <http://127.0.0.1:4173/>
 
+Tarot app (built on this capture's visual language & assets): <http://127.0.0.1:4173/tarot/>
+
 The page must be served over HTTP; opening `index.html` directly with `file://` will not resolve its root-absolute assets.
 
 The Adobe Typekit stylesheet remains hosted by its original CDN, so an internet connection is required for the exact display font. All page-specific scripts, styles, media, sounds, and images are stored locally.
