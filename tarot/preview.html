@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ARCANA v2 · 午夜占卜室 — 视觉稿</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Cormorant:ital,wght@0,500;1,500&family=Noto+Serif+SC:wght@400;600&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --night-0: #05060D;
+  --night-1: #0B0E1A;
+  --night-2: #141B33;
+  --gold-1: #E8C874;
+  --gold-2: #C9A227;
+  --gold-3: #8A6D2F;
+  --silver: #C7CED8;
+  --parchment: #F2EFE6;
+  --ink: #1A1712;
+  --serif: 'Noto Serif SC', 'Songti SC', serif;
+  --display: 'Cinzel', 'Noto Serif SC', serif;
+  --poem: 'Cormorant', 'Noto Serif SC', serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  background: var(--night-1);
+  color: var(--parchment);
+  font-family: var(--serif);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ════════ STAGE: midnight sky ════════ */
+.stage { position: relative; min-height: 100dvh; overflow: hidden; }
+
+/* nebula — pre-baked radial glows */
+.nebula { position: absolute; inset: 0; }
+.nebula::before {
+  content: ''; position: absolute; left: 12%; top: 8%;
+  width: 55vw; height: 55vw; border-radius: 50%;
+  background: radial-gradient(circle, rgba(42,33,64,.55), transparent 65%);
+  filter: blur(60px);
+}
+.nebula::after {
+  content: ''; position: absolute; right: 8%; bottom: 4%;
+  width: 45vw; height: 45vw; border-radius: 50%;
+  background: radial-gradient(circle, rgba(26,31,58,.6), transparent 65%);
+  filter: blur(70px);
+}
+
+/* star field */
+.stars, .stars2 { position: absolute; inset: 0; }
+.star { position: absolute; background: var(--parchment); border-radius: 50%; animation: breathe 7s ease-in-out infinite; }
+.star.big { box-shadow: 0 0 6px 1px rgba(232,200,116,.45); background: var(--gold-1); }
+@keyframes breathe { 0%,100% { opacity: .15; } 50% { opacity: .7; } }
+
+/* zodiac wheel — very slow rotation */
+.wheel-wrap {
+  position: absolute; left: 50%; top: 44%;
+  width: min(88vmin, 860px); aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  opacity: .08; pointer-events: none;
+}
+.wheel-wrap svg { width: 100%; height: 100%; animation: turn 180s linear infinite; }
+@keyframes turn { to { transform: rotate(360deg); } }
+
+/* vignette + grain */
+.stage::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 5;
+  background: radial-gradient(ellipse at center, transparent 18%, rgba(5,6,13,.55) 48%, rgba(5,6,13,.92) 78%, var(--night-0) 96%);
+}
+.grain {
+  position: absolute; inset: 0; pointer-events: none; z-index: 6; opacity: .05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E");
+}
+
+.stage > content, .stage > .layer { position: relative; z-index: 2; }
+
+/* ════════ top bar ════════ */
+.topbar {
+  position: relative; z-index: 10;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 20px 28px;
+  border-bottom: 1px solid rgba(138,109,47,.25);
+}
+.brand { display: flex; align-items: baseline; gap: 14px; }
+.brand .mark { color: var(--gold-1); font-family: var(--display); font-size: 17px; letter-spacing: .32em; text-shadow: 0 0 18px rgba(201,162,39,.35); }
+.brand .zh { color: var(--silver); font-size: 13px; letter-spacing: .5em; }
+
+.moon-widget { display: flex; align-items: center; gap: 12px; }
+.moon-widget svg { width: 36px; height: 36px; filter: drop-shadow(0 0 8px rgba(232,200,116,.3)); }
+.moon-widget .txt { text-align: right; font-family: var(--poem); }
+.moon-widget .txt .phase { font-size: 13px; color: var(--gold-1); letter-spacing: .2em; }
+.moon-widget .txt .say { font-size: 12px; color: var(--silver); opacity: .95; letter-spacing: .12em; }
+
+/* ════════ hero ════════ */
+.hero { text-align: center; padding: 44px 20px 26px; }
+.orn { color: var(--gold-2); font-size: 15px; letter-spacing: .9em; padding-left: .9em; }
+.hero h1 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(44px, 8vw, 84px);
+  letter-spacing: .35em; padding-left: .35em;
+  background: linear-gradient(180deg, var(--gold-1) 15%, var(--gold-2) 55%, var(--gold-3) 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  margin: 22px 0 14px;
+  text-shadow: 0 0 44px rgba(201,162,39,.22);
+}
+.hero .sub {
+  font-family: var(--poem); font-style: italic;
+  color: var(--silver); font-size: 15px; letter-spacing: .34em;
+}
+.hero .sub b { color: var(--gold-1); font-weight: 500; }
+
+/* ════════ ritual question frame ════════ */
+.ritual {
+  width: min(480px, 92vw); margin: 34px auto 24px; position: relative;
+}
+.ritual .corner { position: absolute; width: 18px; height: 18px; border: 1px solid var(--gold-2); }
+.ritual .corner.tl { top: -1px; left: -1px; border-right: none; border-bottom: none; }
+.ritual .corner.tr { top: -1px; right: -1px; border-left: none; border-bottom: none; }
+.ritual .corner.bl { bottom: -1px; left: -1px; border-right: none; border-top: none; }
+.ritual .corner.br { bottom: -1px; right: -1px; border-left: none; border-top: none; }
+.ritual textarea {
+  width: 100%; height: 68px; resize: none;
+  background: rgba(20,27,51,.62);
+  border: 1px solid rgba(201,162,39,.55);
+  color: var(--parchment);
+  font-family: var(--poem); font-size: 15px; letter-spacing: .06em;
+  padding: 14px 16px; text-align: center;
+  transition: border-color .25s, box-shadow .25s;
+}
+.ritual textarea:focus {
+  outline: none; border-color: var(--gold-1);
+  box-shadow: 0 0 24px rgba(201,162,39,.16) inset;
+}
+.ritual textarea::placeholder { color: rgba(199,206,216,.6); }
+.ritual .label {
+  position: absolute; top: -9px; left: 50%; transform: translateX(-50%);
+  background: var(--night-1); padding: 0 12px;
+  font-family: var(--poem); font-size: 11px; letter-spacing: .4em; color: var(--gold-2);
+}
+
+/* ════════ engraved buttons ════════ */
+.spread-pick { display: flex; gap: 18px; justify-content: center; flex-wrap: wrap; }
+.engrave {
+  position: relative; cursor: pointer;
+  background: linear-gradient(180deg, rgba(20,27,51,.7), rgba(11,14,26,.7));
+  border: 1px solid var(--gold-3);
+  color: var(--gold-1);
+  font-family: var(--display); font-size: 13px; letter-spacing: .3em;
+  padding: 15px 30px 15px 34px;
+  transition: box-shadow .25s, border-color .25s, background .25s;
+}
+.engrave::before, .engrave::after {
+  content: '✦'; position: absolute; top: 50%; transform: translateY(-50%);
+  font-size: 9px; color: var(--gold-3); transition: color .25s;
+}
+.engrave::before { left: 12px; }
+.engrave::after { right: 12px; }
+.engrave:hover {
+  border-color: var(--gold-1);
+  box-shadow: 0 0 28px rgba(201,162,39,.18), inset 0 0 22px rgba(201,162,39,.08);
+}
+.engrave:hover::before, .engrave:hover::after { color: var(--gold-1); }
+
+/* ════════ fan of new card backs ════════ */
+.fan-demo { position: relative; height: 230px; width: 760px; max-width: 96vw; margin: 44px auto 10px; }
+.fan-demo .card {
+  position: absolute; left: 50%; bottom: 0;
+  width: 104px; height: 142px; margin-left: -52px;
+  transform-origin: 50% 260%;
+  filter: drop-shadow(0 8px 18px rgba(0,0,0,.6)) drop-shadow(0 0 1px rgba(232,200,116,.35));
+}
+.fan-demo .card svg { width: 100%; height: 100%; display: block; }
+.fan-demo .card:hover { z-index: 30; }
+
+/* ════════ showcase: front & back ════════ */
+.showcase {
+  display: flex; gap: 56px; justify-content: center; align-items: flex-start;
+  flex-wrap: wrap; margin: 46px auto 8px; padding: 0 20px;
+}
+.showcase .cell { text-align: center; }
+.showcase .cap {
+  margin-top: 16px; font-family: var(--poem); font-size: 13px;
+  letter-spacing: .3em; color: var(--silver); opacity: 1;
+}
+.bigcard { width: 236px; height: 322px; filter: drop-shadow(0 18px 44px rgba(0,0,0,.65)); }
+.bigcard svg { width: 100%; height: 100%; display: block; border-radius: 14px; }
+
+/* ════════ reading panel ════════ */
+.reading-demo {
+  width: min(680px, 92vw); margin: 52px auto 0;
+  background: linear-gradient(180deg, rgba(20,27,51,.72), rgba(11,14,26,.72));
+  border: 1px solid rgba(138,109,47,.5);
+  padding: 30px 34px;
+  position: relative;
+}
+.reading-demo::before {
+  content: ''; position: absolute; inset: 5px; pointer-events: none;
+  border: 1px solid rgba(201,162,39,.18);
+}
+.rd-head { display: flex; justify-content: space-between; margin-bottom: 4px; font-family: var(--display); }
+.rd-head .t { font-size: 12px; letter-spacing: .4em; color: var(--gold-2); }
+.rd-head .d { font-size: 11px; letter-spacing: .2em; color: var(--silver); opacity: .9; }
+.rd-div { display: flex; align-items: center; gap: 14px; margin: 10px 0 4px; color: var(--gold-3); font-size: 10px; letter-spacing: .3em; }
+.rd-div::before, .rd-div::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, transparent, rgba(138,109,47,.7), transparent); }
+
+.entry { padding: 20px 0 6px; }
+.entry .slot { font-family: var(--display); font-size: 11px; letter-spacing: .5em; color: var(--gold-1); margin-bottom: 10px; }
+.entry .head { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+.entry .head .zh { font-family: var(--serif); font-weight: 600; font-size: 24px; letter-spacing: .18em; }
+.entry .head .en { font-family: var(--display); font-size: 11px; letter-spacing: .24em; color: var(--silver); opacity: .75; }
+.orient {
+  font-family: var(--display); font-size: 9px; letter-spacing: .3em;
+  border: 1px solid var(--gold-2); color: var(--gold-1);
+  padding: 4px 10px 4px 13px; border-radius: 2px;
+}
+.kw { display: flex; gap: 10px; margin: 14px 0; flex-wrap: wrap; }
+.kw span {
+  font-family: var(--poem); font-size: 12px; letter-spacing: .22em;
+  color: var(--silver); border-bottom: 1px solid rgba(138,109,47,.55); padding: 2px 2px 4px;
+}
+.entry p {
+  font-family: var(--serif); font-size: 14.5px; line-height: 2.1;
+  color: rgba(242,239,230,.88);
+}
+.elements { display: flex; gap: 26px; justify-content: center; margin: 34px 0 8px; }
+.elements svg { width: 22px; height: 22px; opacity: .65; }
+
+.foot {
+  text-align: center; padding: 38px 20px 26px;
+  font-family: var(--poem); font-style: italic; font-size: 13px;
+  letter-spacing: .3em; color: var(--silver); opacity: .85;
+}
+.preview-tag {
+  position: fixed; bottom: 14px; right: 16px; z-index: 50;
+  font-family: var(--display); font-size: 10px; letter-spacing: .3em;
+  color: var(--gold-2); border: 1px solid rgba(138,109,47,.6);
+  padding: 6px 12px 6px 15px; background: rgba(5,6,13,.8); border-radius: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .star, .wheel-wrap svg { animation: none; }
+}
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="nebula"></div>
+  <div class="stars" id="stars"></div>
+  <div class="stars2" id="stars2"></div>
+
+  <!-- zodiac wheel -->
+  <div class="wheel-wrap">
+    <svg viewBox="0 0 400 400" fill="none" stroke="#C9A227" stroke-width=".8">
+      <circle cx="200" cy="200" r="196" stroke-width="1"/>
+      <circle cx="200" cy="200" r="168"/>
+      <circle cx="200" cy="200" r="120"/>
+      <circle cx="200" cy="200" r="52"/>
+      <g id="spokes"></g>
+      <g id="ticks"></g>
+      <g id="constellation"></g>
+    </svg>
+  </div>
+
+  <content>
+    <!-- top bar -->
+    <div class="topbar">
+      <div class="brand"><span class="mark">✦ ARCANA</span><span class="zh">塔罗</span></div>
+      <div class="moon-widget">
+        <div class="txt"><div class="phase" id="moon-phase">—</div><div class="say">今夜宜问卜</div></div>
+        <svg id="moon-svg" viewBox="0 0 40 40"></svg>
+      </div>
+    </div>
+
+    <!-- hero -->
+    <div class="hero">
+      <div class="orn">✦ ✧ ✦</div>
+      <h1>塔 罗</h1>
+      <div class="sub">THE <b>MIDNIGHT</b> SÉANCE · 大阿卡纳 · 二十二</div>
+    </div>
+
+    <!-- ritual question -->
+    <div class="ritual">
+      <span class="label">问 卜</span>
+      <span class="corner tl"></span><span class="corner tr"></span>
+      <span class="corner bl"></span><span class="corner br"></span>
+      <textarea placeholder="静心 · 默念你的问题，或写在这里…"></textarea>
+    </div>
+
+    <div class="spread-pick">
+      <button class="engrave">今日一牌 · ONE</button>
+      <button class="engrave">三张牌阵 · 三世</button>
+    </div>
+
+    <!-- fan of card backs -->
+    <div class="fan-demo" id="fanDemo"></div>
+
+    <!-- big card front + back -->
+    <div class="showcase">
+      <div class="cell">
+        <div class="bigcard" id="frontCard"></div>
+        <div class="cap">牌面 · PARCHMENT &amp; GOLD</div>
+      </div>
+      <div class="cell">
+        <div class="bigcard" id="backCard"></div>
+        <div class="cap">牌背 · MIDNIGHT MANDALA</div>
+      </div>
+    </div>
+
+    <!-- reading panel -->
+    <div class="reading-demo">
+      <div class="rd-head"><span class="t">READING · 解读</span><span class="d">MMXXVI · IX · I</span></div>
+      <div class="rd-div">✦</div>
+      <div class="entry">
+        <div class="slot">现 在 · THE PRESENT</div>
+        <div class="head">
+          <span class="zh">死神</span>
+          <span class="en">XIII · DEATH</span>
+          <span class="orient">逆位 · REVERSED</span>
+        </div>
+        <div class="kw"><span>抗拒</span><span>拖延</span><span>不肯放手</span></div>
+        <p>你抱着枯枝不放，新芽就长不出来。结束已经发生，只是你还没签字同意——黄道轮转动不问你是否准备好，它只问你是否愿意看见。</p>
+      </div>
+      <div class="rd-div">✦</div>
+      <div class="elements" id="elements"></div>
+    </div>
+
+    <div class="foot">AS ABOVE, SO BELOW · 如在其上，如其在下</div>
+  </content>
+
+  <div class="grain"></div>
+  <div class="preview-tag">DESIGN PREVIEW · v2</div>
+</div>
+
+<script>
+/* ---------- stars ---------- */
+function seedStars(el, n, s) {
+  let html = '';
+  for (let i = 0; i < n; i++) {
+    const size = Math.random() < .12 ? 2.4 : 1.2;
+    html += `<i class="star${size > 2 ? ' big' : ''}" style="left:${(Math.random()*100).toFixed(2)}%;top:${(Math.random()*100).toFixed(2)}%;width:${size}px;height:${size}px;animation-delay:-${(Math.random()*9).toFixed(1)}s;animation-duration:${(5.5+Math.random()*4).toFixed(1)}s"></i>`;
+  }
+  el.innerHTML = html;
+}
+seedStars(document.getElementById('stars'), 90);
+seedStars(document.getElementById('stars2'), 40);
+
+/* ---------- zodiac wheel geometry ---------- */
+(() => {
+  const NS = 'http://www.w3.org/2000/svg';
+  const spokes = document.getElementById('spokes');
+  const ticks = document.getElementById('ticks');
+  const cst = document.getElementById('constellation');
+  for (let i = 0; i < 12; i++) {
+    const a = i * Math.PI / 6;
+    const r1 = 120, r2 = 168;
+    const l = document.createElementNS(NS, 'line');
+    l.setAttribute('x1', 200 + r1 * Math.cos(a)); l.setAttribute('y1', 200 + r1 * Math.sin(a));
+    l.setAttribute('x2', 200 + r2 * Math.cos(a)); l.setAttribute('y2', 200 + r2 * Math.sin(a));
+    spokes.appendChild(l);
+    const c = document.createElementNS(NS, 'circle');
+    c.setAttribute('cx', 200 + 144 * Math.cos(a)); c.setAttribute('cy', 200 + 144 * Math.sin(a));
+    c.setAttribute('r', 1.6); c.setAttribute('fill', '#C9A227'); c.setAttribute('stroke', 'none');
+    spokes.appendChild(c);
+  }
+  for (let i = 0; i < 72; i++) {
+    const a = i * Math.PI / 36;
+    const r1 = i % 6 === 0 ? 168 : 182, r2 = 196;
+    const l = document.createElementNS(NS, 'line');
+    l.setAttribute('x1', 200 + r1 * Math.cos(a)); l.setAttribute('y1', 200 + r1 * Math.sin(a));
+    l.setAttribute('x2', 200 + r2 * Math.cos(a)); l.setAttribute('y2', 200 + r2 * Math.sin(a));
+    ticks.appendChild(l);
+  }
+  // small constellation: 5 dots + lines (The Star)
+  const pts = [[176,120],[210,96],[248,118],[268,160],[232,176]];
+  pts.forEach(([x,y]) => {
+    const c = document.createElementNS(NS, 'circle');
+    c.setAttribute('cx', x); c.setAttribute('cy', y); c.setAttribute('r', 2);
+    c.setAttribute('fill', '#C9A227'); c.setAttribute('stroke', 'none');
+    cst.appendChild(c);
+  });
+  for (let i = 0; i < pts.length - 1; i++) {
+    const l = document.createElementNS(NS, 'line');
+    l.setAttribute('x1', pts[i][0]); l.setAttribute('y1', pts[i][1]);
+    l.setAttribute('x2', pts[i+1][0]); l.setAttribute('y2', pts[i+1][1]);
+    l.setAttribute('stroke-width', '.5'); l.setAttribute('opacity', '.6');
+    cst.appendChild(l);
+  }
+})();
+
+/* ---------- moon phase (real) ---------- */
+(() => {
+  const SYNODIC = 29.53058867;
+  const NEW_MOON = Date.UTC(2000, 0, 6, 18, 14) / 86400000;
+  const now = Date.now() / 86400000;
+  const phase = ((now - NEW_MOON) % SYNODIC + SYNODIC) % SYNODIC / SYNODIC; // 0=new .5=full
+  const illum = .5 * (1 - Math.cos(2 * Math.PI * phase));
+  const names = ['朔月 · 新月','娥眉月','上弦月','盈凸月','望月 · 满月','亏凸月','下弦月','残月'];
+  const name = names[Math.round(phase * 8) % 8];
+  document.getElementById('moon-phase').textContent = name + ' · ' + Math.round(illum * 100) + '%';
+
+  const R = 17, CX = 20, CY = 20;
+  const k = Math.cos(2 * Math.PI * phase); // terminator ellipse rx factor
+  const waxing = phase < .5;
+  // lit side path: right (waxing) or left (waning) semicircle + elliptical terminator
+  const lit = waxing
+    ? `M ${CX} ${CY - R} A ${R} ${R} 0 0 1 ${CX} ${CY + R} A ${Math.abs(k) * R} ${R} 0 0 ${k > 0 ? 1 : 0} ${CX} ${CY - R} Z`
+    : `M ${CX} ${CY - R} A ${R} ${R} 0 0 0 ${CX} ${CY + R} A ${Math.abs(k) * R} ${R} 0 0 ${k > 0 ? 0 : 1} ${CX} ${CY - R} Z`;
+  document.getElementById('moon-svg').innerHTML =
+    `<circle cx="${CX}" cy="${CY}" r="${R}" fill="rgba(199,206,216,.13)" stroke="#8A6D2F" stroke-width="1"/>
+     <path d="${lit}" fill="#E8C874"/>
+     <circle cx="${CX}" cy="${CY}" r="${R + 2.5}" fill="none" stroke="rgba(201,162,39,.25)" stroke-width=".6"/>`;
+})();
+
+/* ---------- card back SVG (midnight mandala) ---------- */
+const moonRow = (cx, cy) => {
+  // row of 8 moon phases along the bottom arc
+  let s = '';
+  for (let i = 0; i < 8; i++) {
+    const a = Math.PI * (0.12 + 0.76 * i / 7);
+    const x = cx - 62 * Math.cos(a), y = cy + 62 * Math.sin(a);
+    const fill = i === 0 ? 'none' : i === 4 ? '#E8C874' : 'rgba(232,200,116,.35)';
+    s += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${i === 0 || i === 4 ? 3 : 2}" fill="${fill}" stroke="#C9A227" stroke-width=".8"/>`;
+  }
+  return s;
+};
+const backSVG = `
+<svg viewBox="0 0 236 322" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="236" height="322" rx="14" fill="#141B33"/>
+  <rect x="1" y="1" width="234" height="320" rx="13" stroke="#8A6D2F" stroke-width="1.4"/>
+  <rect x="9" y="9" width="218" height="304" rx="9" stroke="rgba(201,162,39,.55)" stroke-width=".8"/>
+  <rect x="15" y="15" width="206" height="292" rx="7" stroke="rgba(201,162,39,.28)" stroke-width=".5"/>
+  ${[[22,22],[214,22],[22,300],[214,300]].map(([x,y]) => `
+    <path d="M ${x} ${y} m -8 8 v -8 h 8" stroke="#C9A227" stroke-width="1"/>`).join('')}
+  <!-- mandala -->
+  <g stroke="#C9A227" stroke-width="1" transform="translate(118,138)">
+    <circle r="66" stroke-opacity=".9"/>
+    <circle r="58" stroke-opacity=".45" stroke-dasharray="2 5"/>
+    <circle r="40" stroke-opacity=".8"/>
+    <circle r="33" stroke-opacity=".4"/>
+    <circle r="10" stroke-opacity=".9"/>
+    <path d="M0,-66 0,66 M-66,0 66,0 M-46.7,-46.7 46.7,46.7 M46.7,-46.7 -46.7,46.7" stroke-opacity=".55"/>
+    <path d="M0,-40 L4.7,-4.7 40,0 4.7,4.7 0,40 -4.7,4.7 -40,0 -4.7,-4.7 Z" fill="rgba(232,200,116,.1)"/>
+    <circle r="4" fill="#E8C874" stroke="none"/>
+    ${moonRow(0, 0)}
+  </g>
+  <text x="118" y="252" text-anchor="middle" fill="rgba(232,200,116,.75)" font-family="Cinzel, serif" font-size="11" letter-spacing="4">✦ ✧ ✦</text>
+  <text x="118" y="292" text-anchor="middle" fill="rgba(199,206,216,.4)" font-family="Cormorant, serif" font-style="italic" font-size="9" letter-spacing="2.5">the cards know</text>
+  <text x="118" y="305" text-anchor="middle" fill="rgba(199,206,216,.3)" font-family="'Noto Serif SC', serif" font-size="8" letter-spacing="4">牌 知 晓 一 切</text>
+</svg>`;
+
+/* ---------- card front SVG (parchment + gold/ink) ---------- */
+const frontSVG = (numeral, zh, en, art) => `
+<svg viewBox="0 0 236 322" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="parch" cx="50%" cy="42%" r="75%">
+      <stop offset="0%" stop-color="#F6F2E4"/>
+      <stop offset="55%" stop-color="#F2EFE6"/>
+      <stop offset="88%" stop-color="#E9E2CC"/>
+      <stop offset="100%" stop-color="#DFD5B8"/>
+    </radialGradient>
+    <linearGradient id="gld" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#E8C874"/>
+      <stop offset="55%" stop-color="#C9A227"/>
+      <stop offset="100%" stop-color="#8A6D2F"/>
+    </linearGradient>
+  </defs>
+  <rect width="236" height="322" rx="14" fill="url(#parch)" stroke="#8A6D2F" stroke-width="1.4"/>
+  <rect x="9" y="9" width="218" height="304" rx="9" fill="none" stroke="rgba(138,109,47,.75)" stroke-width="1"/>
+  <rect x="15" y="15" width="206" height="292" rx="7" fill="none" stroke="rgba(138,109,47,.3)" stroke-width=".5"/>
+  ${[[26,26],[210,26],[26,296],[210,296]].map(([x,y]) => `
+    <path d="M ${x} ${y} m -9 9 v -9 h 9" fill="none" stroke="url(#gld)" stroke-width="1.4"/>`).join('')}
+  <!-- numeral -->
+  <text x="34" y="52" fill="#1A1712" font-family="Cinzel, serif" font-size="20" letter-spacing="2">${numeral}</text>
+  <text x="202" y="292" fill="#1A1712" font-family="Cinzel, serif" font-size="20" letter-spacing="2" transform="rotate(180 202 285)">${numeral}</text>
+  <!-- star halo -->
+  <g stroke="rgba(138,109,47,.35)" stroke-width=".7">
+    <line x1="118" y1="68" x2="118" y2="208"/><line x1="48" y1="138" x2="188" y2="138"/>
+    <line x1="68.5" y1="88.5" x2="167.5" y2="187.5"/><line x1="167.5" y1="88.5" x2="68.5" y2="187.5"/>
+    <line x1="48" y1="120.5" x2="118" y2="138"/><line x1="48" y1="155.5" x2="118" y2="138"/>
+    <line x1="188" y1="120.5" x2="118" y2="138"/><line x1="188" y1="155.5" x2="118" y2="138"/>
+  </g>
+  <!-- emblem: ink with gold ring -->
+  <circle cx="118" cy="138" r="56" fill="none" stroke="url(#gld)" stroke-width="1.2"/>
+  <circle cx="118" cy="138" r="61" fill="none" stroke="rgba(138,109,47,.35)" stroke-width=".5" stroke-dasharray="1 4"/>
+  <g transform="translate(118,138) scale(.86)" fill="none" stroke="#1A1712" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">${art}</g>
+  <!-- names -->
+  <text x="118" y="238" text-anchor="middle" fill="#1A1712" font-family="'Noto Serif SC', serif" font-weight="600" font-size="26" letter-spacing="10">${zh}</text>
+  <text x="118" y="260" text-anchor="middle" fill="#8A6D2F" font-family="Cinzel, serif" font-size="10.5" letter-spacing="5">${en}</text>
+  <text x="118" y="279" text-anchor="middle" fill="rgba(138,109,47,.6)" font-size="8" letter-spacing="3">✦ · ✧ · ✦</text>
+</svg>`;
+
+const ART_DEATH = '<circle cx="50" cy="42" r="18"/><circle cx="43" cy="40" r="3.5"/><circle cx="57" cy="40" r="3.5"/><path d="M50 46l-3 6h6z"/><path d="M42 60v8M50 61v9M58 60v8"/>';
+const ART_STAR = '<path d="M50 18v64M18 50h64M27 27l46 46M73 27 27 73"/><circle cx="50" cy="50" r="6"/><path d="M30 88q10-6 20 0t20 0"/>';
+
+document.getElementById('backCard').innerHTML = backSVG;
+document.getElementById('frontCard').innerHTML = frontSVG('XIII', '死 神', 'DEATH', ART_DEATH);
+
+/* ---------- fan demo ---------- */
+(() => {
+  const fan = document.getElementById('fanDemo');
+  const n = 11;
+  fan.innerHTML = Array.from({ length: n }, (_, i) => {
+    const r = ((i / (n - 1)) - .5) * 58;
+    const x = (i - (n - 1) / 2) * 42;
+    return `<div class="card" style="transform:rotate(${r.toFixed(1)}deg); left:calc(50% + ${x}px); z-index:${n - Math.abs(i - (n - 1) / 2)}">${backSVG}</div>`;
+  }).join('');
+})();
+
+/* ---------- alchemical elements ---------- */
+document.getElementById('elements').innerHTML = `
+  <svg viewBox="0 0 24 24" fill="none" stroke="#C9A227" stroke-width="1.2"><path d="M12 3 20 19H4z"/></svg>
+  <svg viewBox="0 0 24 24" fill="none" stroke="#C9A227" stroke-width="1.2"><path d="M12 21 4 5h16z"/></svg>
+  <svg viewBox="0 0 24 24" fill="none" stroke="#C9A227" stroke-width="1.2"><path d="M12 3 20 19H4z"/><path d="M8.5 15h7"/></svg>
+  <svg viewBox="0 0 24 24" fill="none" stroke="#C9A227" stroke-width="1.2"><path d="M12 21 4 5h16z"/><path d="M8.5 9h7"/></svg>`;
+</script>
+</body>
+</html>

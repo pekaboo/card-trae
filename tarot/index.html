@@ -3,67 +3,91 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>ARCANA — 塔罗</title>
-  <meta name="description" content="黑幕之下的塔罗占卜：静心、提问、凭直觉抽牌。22 张大阿卡纳，单张与三张牌阵。" />
+  <title>ARCANA — 午夜占卜室</title>
+  <meta name="description" content="午夜占卜室：静心、问卜、凭直觉抽牌。22 张大阿卡纳，单张与三张牌阵，星空与月相之下。" />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="/tarot/style.css" />
 </head>
 <body>
   <div class="stage">
-    <div class="topbar">
-      <div class="brand"><em>✦</em>&nbsp;ARCANA · 塔罗</div>
-      <div class="controls">
-        <button class="pill" id="mute" aria-pressed="false" title="声音开关">声音 开</button>
-      </div>
+    <div class="nebula"></div>
+    <div class="stars" id="stars"></div>
+    <div class="stars2" id="stars2"></div>
+
+    <!-- zodiac wheel: built by app.js, ultra-slow rotation -->
+    <div class="wheel-wrap" aria-hidden="true">
+      <svg viewBox="0 0 400 400" fill="none" stroke="#C9A227" stroke-width=".8">
+        <circle cx="200" cy="200" r="196" stroke-width="1"/>
+        <circle cx="200" cy="200" r="168"/>
+        <circle cx="200" cy="200" r="120"/>
+        <circle cx="200" cy="200" r="52"/>
+        <g id="spokes"></g>
+        <g id="ticks"></g>
+        <g id="constellation"></g>
+      </svg>
     </div>
 
-    <!-- scene 1: choose a spread -->
-    <section class="scene active" id="scene-choose">
-      <div class="scene-wrap">
-        <div class="mantle">
-          <div class="glyph">✦ ✧ ✦</div>
-          <h1>塔 罗</h1>
-          <p>TAROT · MAJOR ARCANA · 22</p>
+    <main class="layer">
+      <!-- top bar: brand + living moon -->
+      <div class="topbar">
+        <div class="brand"><span class="mark">✦ ARCANA</span><span class="zh">塔罗</span></div>
+        <div class="moon-widget">
+          <div class="txt"><div class="phase" id="moon-phase">—</div><div class="say">今夜宜问卜</div></div>
+          <svg id="moon-svg" viewBox="0 0 40 40" aria-hidden="true"></svg>
         </div>
-        <div class="question">
-          <textarea id="question" maxlength="60" placeholder="（可选）在心中默念你的问题，或写在这里…"></textarea>
-        </div>
-        <div class="spread-pick">
-          <button class="pill" data-spread="one" style="padding:12px 22px;font-size:13px">今日一牌 · ONE</button>
-          <button class="pill" data-spread="three" style="padding:12px 22px;font-size:13px">三张牌阵 · 过去·现在·未来</button>
-        </div>
-        <div class="hint" style="margin-top:34px">塔罗是一面镜子 · 它照见的是你自己</div>
       </div>
-    </section>
 
-    <!-- scene 2: draw from the fan -->
-    <section class="scene" id="scene-draw">
-      <div class="scene-wrap">
+      <!-- scene 1: choose a spread -->
+      <section class="scene active" id="scene-choose">
+        <div class="hero">
+          <div class="orn">✦ ✧ ✦</div>
+          <h1>塔 罗</h1>
+          <div class="sub">THE <b>MIDNIGHT</b> SÉANCE · 大阿卡纳 · 二十二</div>
+        </div>
+
+        <div class="ritual">
+          <span class="label">问 卜</span>
+          <span class="corner tl"></span><span class="corner tr"></span>
+          <span class="corner bl"></span><span class="corner br"></span>
+          <textarea id="question" maxlength="60" placeholder="静心 · 默念你的问题，或写在这里…"></textarea>
+        </div>
+
+        <div class="spread-pick">
+          <button class="engrave" data-spread="one">今日一牌 · ONE</button>
+          <button class="engrave" data-spread="three">三张牌阵 · 三世</button>
+        </div>
+
+        <div class="hint hint-static">塔罗是一面镜子 · 它照见的是你自己</div>
+      </section>
+
+      <!-- scene 2: draw from the fan -->
+      <section class="scene" id="scene-draw">
         <div class="hint">深呼吸 · 凭直觉选择 <b id="pick-count">一张牌</b></div>
         <div class="slots" id="slots"></div>
         <div class="fan-scroll"><div class="fan" id="fan"></div></div>
-        <div class="actions" id="draw-actions">
-          <button class="pill" id="back-choose">← 换牌阵</button>
+        <div class="actions">
+          <button class="engrave" id="back-choose">← 换牌阵</button>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- scene 3: reveal + reading -->
-    <section class="scene" id="scene-reveal">
-      <div class="scene-wrap">
+      <!-- scene 3: reveal + reading -->
+      <section class="scene" id="scene-reveal">
         <div class="hint" id="reveal-hint">牌面已启</div>
         <div class="slots" id="reveal-slots"></div>
         <div class="reading" id="reading"></div>
         <div class="actions">
-          <button class="pill" id="again" style="padding:11px 22px">↺ 再抽一次</button>
-          <button class="pill" id="change-spread" style="padding:11px 22px">换牌阵</button>
+          <button class="engrave" id="again">↺ 再抽一次</button>
+          <button class="engrave" id="change-spread">换牌阵</button>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <div class="foot">✦ 基于牌的仪式 · 不预言，只映照 ✦</div>
+      <div class="foot">AS ABOVE, SO BELOW · 如在其上，如其在下</div>
+    </main>
+
+    <div class="grain"></div>
   </div>
 
+  <button id="mute" class="engrave mute-btn" aria-pressed="false" title="声音开关">声音 开</button>
   <script type="module" src="/tarot/app.js"></script>
 </body>
 </html>
