@@ -21,3 +21,6 @@ The Adobe Typekit stylesheet remains hosted by its original CDN, so an internet 
 ## Intended use
 
 This capture is for local study and visual comparison only. Do not republish or present it as an official Trae site without permission from the site owner.
+
+
+<img width="1800" height="1017" alt="image" src="https://github.com/user-attachments/assets/0059d37e-6feb-4d7c-b72a-38dcec39db53" />
